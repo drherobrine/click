@@ -4,10 +4,25 @@ import time
 
 cash = 0
 clickersBought = 0
-clickerWorkTime = 15
+clickerWorkTime = 1
 clickerCost = 10
 clickerCostMultiplier = 1
+clickerWorkTimeMS = clickerWorkTime * 1000
 
+
+def addCash():
+    global cash
+    global clickerWorkTimeMS
+    global clickersBought
+    cash += clickersBought
+    print(clickerWorkTimeMS)
+    Game.after(clickerWorkTimeMS, addCash)
+    cashDisplayV.set("Cash: $" + str(cash))
+
+def timer():
+    global cash
+    global clickerWorkTimeMS
+    Game.after(clickerWorkTimeMS, addCash)
 
 def hideMe(sth):
     sth.pack_forget()
@@ -17,9 +32,9 @@ def click():
     global cash
     cash += 1
     cashDisplayV.set("Cash: $" + str(cash))
-    print(cash)
 
 def shopUI():
+    clickerCostDisplay.pack()
     hideMe(shop)
     hideMe(click)
     back.pack()
@@ -28,11 +43,15 @@ def shopUI():
 
 
 def clicker():
+    global clickerCost
+    global cash
+    global clickerWorkTime
     cash += clickersBought
     time.sleep(clickerWorkTime)
 
 
 def normalUI():
+    hideMe(clickerCostDisplay)
     hideMe(back)
     hideMe(buy)
     hideMe(clickerNum)
@@ -62,6 +81,7 @@ def buyClicker():
 print("Please wait 15 seconds.")
 Game = Tk()
 
+
 Game.title("Garry's Clicker")
 global costDisplayV
 screenHeight = Game.winfo_screenheight()
@@ -85,6 +105,6 @@ cashDisplay.pack(anchor=NE)
 click.pack(anchor=CENTER)
 shop.pack()
 
-clicker()
+Game.after(clickerWorkTimeMS, addCash)
 
 Game.mainloop()
