@@ -2,6 +2,12 @@
 from tkinter import *
 import time
 
+global cash
+global clickersBought
+global clickerWorkTimeMS
+global clickerCost
+global clickerNum
+global clickerCostMultiplier
 cash = 0
 clickersBought = 0
 clickerWorkTime = 1
@@ -15,9 +21,27 @@ def addCash():
     global clickerWorkTimeMS
     global clickersBought
     cash += clickersBought
-    print(clickerWorkTimeMS)
     Game.after(clickerWorkTimeMS, addCash)
     cashDisplayV.set("Cash: $" + str(cash))
+    save()
+
+
+def save():
+    saveFile = open("save.txt", "w")
+    saveFile.write("%d" %cash + "\n")
+    saveFile.write("%d" %clickersBought + "\n")
+    saveFile.close()
+
+def load():
+    global cash
+    global clickersBought
+    loadFile = open("save.txt", "r")
+    loadLines = loadFile.readlines()
+    cash = int(loadLines[0])
+    clickersBought = int(loadLines[1])
+    print(cash)
+    print(clickersBought)
+    loadFile.close()
 
 def timer():
     global cash
@@ -78,8 +102,9 @@ def buyClicker():
         cashDisplayV.set("Cash: $" + str(cash))
         cashDisplay.pack()
 
-print("Please wait 15 seconds.")
+load()
 Game = Tk()
+
 
 
 Game.title("Garry's Clicker")
@@ -101,10 +126,13 @@ shop = Button(Game, text="Shop", command=shopUI)
 cashDisplay = Label(Game, textvariable=cashDisplayV, font=("Helvetica", 24))
 clickerNum = Label(Game, textvariable=clickersBoughtV, font=("Helvetica", 24))
 clickerCostDisplay = Label(Game, textvariable=costDisplayV, font=("Helvetica", 24))
-cashDisplay.pack(anchor=NE)
 click.pack(anchor=CENTER)
+cashDisplay.pack(anchor=NE)
+load = Button(Game, text="load", command=load)
+load.pack()
 shop.pack()
 
 Game.after(clickerWorkTimeMS, addCash)
+
 
 Game.mainloop()
