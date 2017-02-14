@@ -128,8 +128,6 @@ clickerNum = Label(Game, textvariable=clickersBoughtV, font=("Helvetica", 24))
 clickerCostDisplay = Label(Game, textvariable=costDisplayV, font=("Helvetica", 24))
 click.pack(anchor=CENTER)
 cashDisplay.pack(anchor=NE)
-load = Button(Game, text="load", command=load)
-load.pack()
 shop.pack()
 
 Game.after(clickerWorkTimeMS, addCash)
