@@ -2,12 +2,22 @@
 from tkinter import *
 import time
 
+global clickStrength
 global cash
 global clickersBought
 global clickerWorkTimeMS
 global clickerCost
 global clickerNum
 global clickerCostMultiplier
+global upgradesBought
+global clickStrengthMultiplier
+global upgradeCost
+global upgradeCostMultiplier
+upgradeCostMultiplier = 1
+upgradeCost = 5
+clickStrengthMultiplier = 1
+upgradesBought = 0
+clickStrength = 1
 cash = 0
 clickersBought = 0
 clickerWorkTime = 1
@@ -30,15 +40,33 @@ def save():
     saveFile = open("save.txt", "w")
     saveFile.write("%d" %cash + "\n")
     saveFile.write("%d" %clickersBought + "\n")
+    saveFile.write("%d" %clickerCost + "\n")
+    saveFile.write("%d" %clickerCostMultiplier + "\n")
+    saveFile.write("%d" %upgradesBought + "\n")
+    saveFile.write("%d" %upgradeCost + "\n")
+    saveFile.write("%d" %upgradeCostMultiplier + "\n")
+    saveFile.write("%d" %clickStrengthMultiplier + "\n")
     saveFile.close()
 
 def load():
     global cash
     global clickersBought
+    global clickerCost
+    global clickerCostMultiplier
+    global upgradesBought
+    global upgradeCost
+    global upgradeCostMultiplier
+    global clickStrengthMultiplier
     loadFile = open("save.txt", "r")
     loadLines = loadFile.readlines()
     cash = int(loadLines[0])
     clickersBought = int(loadLines[1])
+    clickerCost = int(loadLines[2])
+    clickerCostMultiplier = int(loadLines[3])
+    upgradesBought = int(loadLines[4])
+    upgradeCost = int(loadLines[5])
+    upgradeCostMultiplier = int(loadLines[6])
+    clickStrengthMultiplier = int(loadLines[7])
     print(cash)
     print(clickersBought)
     loadFile.close()
@@ -54,15 +82,19 @@ def hideMe(sth):
 
 def click():
     global cash
-    cash += 1
+    cash += clickStrength
     cashDisplayV.set("Cash: $" + str(cash))
 
 def shopUI():
+    costDisplayV.set("Next Clicker: $" + str(clickerCost))
+    upgradeDisplayV.set("Next Upgrade: $" + str(upgradeCost))
     clickerCostDisplay.pack()
+    upgradeCostDisplay.pack()
+    buyUG.pack()
     hideMe(shop)
     hideMe(click)
     back.pack()
-    buy.pack()
+    buyClick.pack()
     clickerNum.pack()
 
 
@@ -73,12 +105,32 @@ def clicker():
     cash += clickersBought
     time.sleep(clickerWorkTime)
 
+def buyUpgrade():
+    global upgradeCost
+    global cash
+    global upgradesBought
+    global clickStrength
+    global clickStrengthMultiplier
+    global upgradeCostMultiplier
+    upgradeDisplayV.set("Next Upgrade:" + str(upgradeCost))
+    if cash < upgradeCost:
+        pass
+    else:
+        upgradesBought += 1
+        clickStrength += clickStrengthMultiplier
+        upgradeCost += upgradeCostMultiplier
+        upgradeCostMultiplier += 1
+        clickStrengthMultiplier += 1
+        cash -= upgradeCost
+
 
 def normalUI():
     hideMe(clickerCostDisplay)
     hideMe(back)
-    hideMe(buy)
+    hideMe(buyClick)
     hideMe(clickerNum)
+    hideMe(buyUG)
+    hideMe(upgradeCostDisplay)
     click.pack(anchor=CENTER)
     cashDisplay.pack(anchor=NE)
     shop.pack()
@@ -116,9 +168,10 @@ geometry = "%dx%d" % (screenWidth, screenHeight)
 Game.geometry(geometry)
 
 
-buy = Button(Game, text="Buy Clicker", command=buyClicker)
+buyClick = Button(Game, text="Buy Clicker", command=buyClicker)
 back = Button(Game, text="Back", command=normalUI)
 click = Button(Game, text="Click", command=click, padx=10, pady=10)
+upgradeDisplayV = StringVar()
 cashDisplayV = StringVar()
 clickersBoughtV = StringVar()
 costDisplayV = StringVar()
@@ -126,6 +179,8 @@ shop = Button(Game, text="Shop", command=shopUI)
 cashDisplay = Label(Game, textvariable=cashDisplayV, font=("Helvetica", 24))
 clickerNum = Label(Game, textvariable=clickersBoughtV, font=("Helvetica", 24))
 clickerCostDisplay = Label(Game, textvariable=costDisplayV, font=("Helvetica", 24))
+upgradeCostDisplay = Label(Game, textvariable=upgradeDisplayV, font=("Helvetica", 24))
+buyUG = Button(Game, text="Mouse Upgrade", command=buyUpgrade)
 click.pack(anchor=CENTER)
 cashDisplay.pack(anchor=NE)
 shop.pack()
