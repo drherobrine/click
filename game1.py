@@ -13,8 +13,8 @@ global upgradesBought
 global clickStrengthMultiplier
 global upgradeCost
 global upgradeCostMultiplier
-upgradeCostMultiplier = 1
-upgradeCost = 5
+upgradeCostMultiplier = 50
+upgradeCost = 1000
 clickStrengthMultiplier = 1
 upgradesBought = 0
 clickStrength = 1
@@ -112,7 +112,7 @@ def buyUpgrade():
     global clickStrength
     global clickStrengthMultiplier
     global upgradeCostMultiplier
-    upgradeDisplayV.set("Next Upgrade:" + str(upgradeCost))
+    upgradeDisplayV.set("Next Upgrade: $" + str(upgradeCost))
     if cash < upgradeCost:
         pass
     else:
