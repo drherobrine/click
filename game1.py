@@ -1,4 +1,3 @@
-
 from tkinter import *
 import time
 
@@ -37,6 +36,7 @@ def addCash():
 
 
 def save():
+    global clickStrength
     saveFile = open("save.txt", "w")
     saveFile.write("%d" %cash + "\n")
     saveFile.write("%d" %clickersBought + "\n")
@@ -46,6 +46,7 @@ def save():
     saveFile.write("%d" %upgradeCost + "\n")
     saveFile.write("%d" %upgradeCostMultiplier + "\n")
     saveFile.write("%d" %clickStrengthMultiplier + "\n")
+    saveFile.write("%d" %clickStrength + "\n")
     saveFile.close()
 
 def load():
@@ -57,6 +58,7 @@ def load():
     global upgradeCost
     global upgradeCostMultiplier
     global clickStrengthMultiplier
+    global clickStrength
     loadFile = open("save.txt", "r")
     loadLines = loadFile.readlines()
     cash = int(loadLines[0])
@@ -67,6 +69,7 @@ def load():
     upgradeCost = int(loadLines[5])
     upgradeCostMultiplier = int(loadLines[6])
     clickStrengthMultiplier = int(loadLines[7])
+    clickStrength = int(loadLines[8])
     print(cash)
     print(clickersBought)
     loadFile.close()
