@@ -1,3 +1,4 @@
+
 from tkinter import *
 import time
 
@@ -25,6 +26,50 @@ clickerCostMultiplier = 1
 clickerWorkTimeMS = clickerWorkTime * 1000
 
 
+def start():
+    global cash
+
+    hideMe(startB)
+    if cash == 0:
+        intro()
+    else:
+        pass
+
+
+def intro():
+    time.sleep(1)
+    disposableLabelV.set('One morning, you thought... "Is it possible to become a billionaire by clicking?"')
+    disposableLabel.pack()
+    Tk.update(Game)
+    time.sleep(2)
+    disposableLabelV.set("Sounds impossible, but it's true!")
+    disposableLabel.pack()
+    Tk.update(Game)
+    time.sleep(2)
+    hideMe(disposableLabel)
+    clickB.pack(anchor=CENTER)
+    cashDisplay.pack(anchor=NE)
+    shop.pack()
+
+
+def checkWin():
+    global cash
+    if cash >= 1000000000:
+        disposableLabelV.set("You won!")
+        hideMe(buyClick)
+        hideMe(back)
+        hideMe(clickB)
+        hideMe(shop)
+        hideMe(cashDisplay)
+        hideMe(clickerCostDisplay)
+        hideMe(clickerNum)
+        hideMe(upgradeCostDisplay)
+        hideMe(upgradeCostDisplay)
+        hideMe(buyUG)
+        disposableLabel.pack()
+    Game.after(100, checkWin)
+
+
 def addCash():
     global cash
     global clickerWorkTimeMS
@@ -36,7 +81,6 @@ def addCash():
 
 
 def save():
-    global clickStrength
     saveFile = open("save.txt", "w")
     saveFile.write("%d" %cash + "\n")
     saveFile.write("%d" %clickersBought + "\n")
@@ -46,7 +90,7 @@ def save():
     saveFile.write("%d" %upgradeCost + "\n")
     saveFile.write("%d" %upgradeCostMultiplier + "\n")
     saveFile.write("%d" %clickStrengthMultiplier + "\n")
-    saveFile.write("%d" %clickStrength + "\n")
+    saveFile.write("%s" %str(clickStrength))
     saveFile.close()
 
 def load():
@@ -58,7 +102,6 @@ def load():
     global upgradeCost
     global upgradeCostMultiplier
     global clickStrengthMultiplier
-    global clickStrength
     loadFile = open("save.txt", "r")
     loadLines = loadFile.readlines()
     cash = int(loadLines[0])
@@ -70,8 +113,6 @@ def load():
     upgradeCostMultiplier = int(loadLines[6])
     clickStrengthMultiplier = int(loadLines[7])
     clickStrength = int(loadLines[8])
-    print(cash)
-    print(clickersBought)
     loadFile.close()
 
 def timer():
@@ -95,7 +136,7 @@ def shopUI():
     upgradeCostDisplay.pack()
     buyUG.pack()
     hideMe(shop)
-    hideMe(click)
+    hideMe(clickB)
     back.pack()
     buyClick.pack()
     clickerNum.pack()
@@ -134,7 +175,7 @@ def normalUI():
     hideMe(clickerNum)
     hideMe(buyUG)
     hideMe(upgradeCostDisplay)
-    click.pack(anchor=CENTER)
+    clickB.pack(anchor=CENTER)
     cashDisplay.pack(anchor=NE)
     shop.pack()
 
@@ -163,6 +204,7 @@ Game = Tk()
 
 
 Game.title("Garry's Clicker")
+
 global costDisplayV
 screenHeight = Game.winfo_screenheight()
 screenWidth = Game.winfo_screenwidth()
@@ -170,25 +212,27 @@ geometry = "%dx%d" % (screenWidth, screenHeight)
 
 Game.geometry(geometry)
 
-
-buyClick = Button(Game, text="Buy Clicker", command=buyClicker)
-back = Button(Game, text="Back", command=normalUI)
-click = Button(Game, text="Click", command=click, padx=10, pady=10)
 upgradeDisplayV = StringVar()
 cashDisplayV = StringVar()
 clickersBoughtV = StringVar()
 costDisplayV = StringVar()
+disposableLabelV = StringVar()
+disposableLabel = Label(Game, textvariable=disposableLabelV, font=("Helvetica", 30))
+disposableLabel.pack()
+startB = Button(Game, text="Start Game", command=start, padx=screenWidth, pady=screenHeight)
+buyClick = Button(Game, text="Buy Clicker", command=buyClicker)
+back = Button(Game, text="Back", command=normalUI)
+clickB = Button(Game, text="Click", command=click, padx=10, pady=10)
 shop = Button(Game, text="Shop", command=shopUI)
 cashDisplay = Label(Game, textvariable=cashDisplayV, font=("Helvetica", 24))
 clickerNum = Label(Game, textvariable=clickersBoughtV, font=("Helvetica", 24))
 clickerCostDisplay = Label(Game, textvariable=costDisplayV, font=("Helvetica", 24))
 upgradeCostDisplay = Label(Game, textvariable=upgradeDisplayV, font=("Helvetica", 24))
 buyUG = Button(Game, text="Mouse Upgrade", command=buyUpgrade)
-click.pack(anchor=CENTER)
-cashDisplay.pack(anchor=NE)
-shop.pack()
+startB.pack(anchor=CENTER)
 
 Game.after(clickerWorkTimeMS, addCash)
 
+Game.after(1000, checkWin)
 
 Game.mainloop()
