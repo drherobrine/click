@@ -26,6 +26,17 @@ clickerCostMultiplier = 1
 clickerWorkTimeMS = clickerWorkTime * 1000
 
 
+def tax():
+    global cash
+    if cash <= 1000:
+        cash -= 15
+    elif cash <= 1000000:
+        cash -= 1000
+    elif cash <= 1000000000:
+        cash -= 10000
+    Game.after(42000, tax)
+
+
 def start():
     global cash
 
@@ -234,5 +245,5 @@ startB.pack(anchor=CENTER)
 Game.after(clickerWorkTimeMS, addCash)
 
 Game.after(1000, checkWin)
-
+Game.after(42000, tax)
 Game.mainloop()
