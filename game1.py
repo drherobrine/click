@@ -1,7 +1,6 @@
 
 from tkinter import *
 import time
-import random
 
 global clickStrength
 global cash
@@ -25,7 +24,17 @@ clickerWorkTime = 1
 clickerCost = 10
 clickerCostMultiplier = 1
 clickerWorkTimeMS = clickerWorkTime * 1000
-anchors = [CENTER, N, S, E, W, NE, NW, SE, SW]
+
+
+def tax():
+    global cash
+    if cash <= 1000:
+        cash -= 15
+    elif cash <= 1000000:
+        cash -= 1000
+    elif cash <= 1000000000:
+        cash -= 10000
+    Game.after(604800, tax)
 
 
 def start():
@@ -132,7 +141,6 @@ def click():
     global cash
     cash += clickStrength
     cashDisplayV.set("Cash: $" + str(cash))
-    clickB.pack(anchor=random.choice(anchors))
 
 def shopUI():
     costDisplayV.set("Next Clicker: $" + str(clickerCost))
@@ -239,5 +247,5 @@ startB.pack(anchor=CENTER)
 Game.after(clickerWorkTimeMS, addCash)
 
 Game.after(1000, checkWin)
-
+Game.after(604800, tax)
 Game.mainloop()
